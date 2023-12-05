@@ -75,7 +75,7 @@ pub fn run(config: Config) -> MyResult<()> {
                 break;
             }
 
-            if line.trim() == old_line.trim() {
+            if line.trim_end() == old_line.trim_end() {
                 line_count += 1;
             } else {
                 if !old_line.is_empty() {
