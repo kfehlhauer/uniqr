@@ -49,12 +49,7 @@ fn format_field(value: usize, show: bool) -> String {
     }
 }
 
-fn print_or_write(
-    field: String,
-    count: usize,
-    file: &mut Option<File>,
-    config: &Config,
-) -> MyResult<()> {
+fn output(field: String, count: usize, file: &mut Option<File>, config: &Config) -> MyResult<()> {
     let formatted = format!("{}{}", format_field(count, config.count), field);
     match file {
         Some(f) => write!(f, "{}", formatted)?,
@@ -84,7 +79,7 @@ pub fn run(config: Config) -> MyResult<()> {
                 line_count += 1;
             } else {
                 if !old_line.is_empty() {
-                    print_or_write(old_line, line_count, &mut out_file, &config)?;
+                    output(old_line, line_count, &mut out_file, &config)?;
                 }
                 line_count = 1;
                 old_line = line.clone();
@@ -92,7 +87,7 @@ pub fn run(config: Config) -> MyResult<()> {
             line.clear();
             bytes = file.read_line(&mut line)?;
         }
-        print_or_write(old_line, line_count, &mut out_file, &config)?;
+        output(old_line, line_count, &mut out_file, &config)?;
         if let Some(mut file) = out_file {
             file.flush()?;
         }
